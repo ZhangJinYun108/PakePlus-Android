@@ -1,0 +1,10 @@
+{
+  "name": "jidian-shenme",
+  "version": "0.1.0",
+  "description": "说一句话，AI 帮你归好类 · 个人管理 App（Web 版）",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "npx --yes serve -l 5180 ."
+  }
+}
