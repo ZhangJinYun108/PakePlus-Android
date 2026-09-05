@@ -1,0 +1,41 @@
+<!doctype html><meta charset="utf-8">
+<script>
+const now = new Date();
+const at = (dayOffset, h, m) => { const d = new Date(now); d.setDate(d.getDate() + dayOffset); d.setHours(h, m, 0, 0); return d.toISOString(); };
+const recs = [
+  { id:'t1', type:'todo', raw:'完成设计稿初稿', title:'完成设计稿初稿', energy:'high', occurredAt:at(0,9,0), done:false, createdAt:at(0,9,0) },
+  { id:'t2', type:'todo', raw:'预约体检', title:'预约体检', energy:'low', occurredAt:at(0,14,0), done:false, createdAt:at(0,9,1) },
+  { id:'t3', type:'todo', raw:'给妈妈打电话', title:'给妈妈打电话', energy:'mid', occurredAt:at(0,20,0), done:false, createdAt:at(0,9,2) },
+  { id:'t4', type:'todo', raw:'写周报', title:'写周报', energy:'mid', occurredAt:at(-1,17,0), done:true, createdAt:at(-1,17,0) },
+  { id:'t5', type:'todo', raw:'健身', title:'健身打卡', energy:'high', occurredAt:at(-3,19,0), done:false, createdAt:at(-3,19,0) },
+  { id:'t6', type:'todo', raw:'取快递', title:'取快递', energy:'low', occurredAt:at(-5,12,0), done:false, createdAt:at(-5,12,0) },
+
+  { id:'l1', type:'ledger', raw:'今天中午在国广吃了安寿司花了88.5', amount:88.5, category:'餐饮', place:'国广', brand:'安寿司', isIncome:false, rating:'good', photos:[], occurredAt:at(0,12,10), createdAt:at(0,12,10) },
+  { id:'l2', type:'ledger', raw:'早上打车花了23块', amount:23, category:'交通', isIncome:false, rating:null, photos:[], occurredAt:at(0,8,20), createdAt:at(0,8,20) },
+  { id:'l3', type:'ledger', raw:'超市买菜 136', amount:136, category:'居家', place:'永辉', isIncome:false, rating:'ok', photos:[], occurredAt:at(-1,19,0), createdAt:at(-1,19,0) },
+  { id:'l4', type:'ledger', raw:'买了件外套 459', amount:459, category:'购物', brand:'UNIQLO', isIncome:false, rating:'good', photos:[], occurredAt:at(-2,15,30), createdAt:at(-2,15,30) },
+  { id:'l5', type:'ledger', raw:'看电影 78', amount:78, category:'娱乐', place:'万达', isIncome:false, rating:'bad', photos:[], occurredAt:at(-3,20,0), createdAt:at(-3,20,0) },
+  { id:'l6', type:'ledger', raw:'午饭 32', amount:32, category:'餐饮', isIncome:false, rating:null, photos:[], occurredAt:at(-4,12,0), createdAt:at(-4,12,0) },
+  { id:'l7', type:'ledger', raw:'地铁充值 100', amount:100, category:'交通', isIncome:false, rating:null, photos:[], occurredAt:at(-5,8,0), createdAt:at(-5,8,0) },
+  { id:'l8', type:'ledger', raw:'感冒药 46', amount:46, category:'医疗', isIncome:false, rating:null, photos:[], occurredAt:at(-6,10,0), createdAt:at(-6,10,0) },
+  { id:'l9', type:'ledger', raw:'咖啡 28', amount:28, category:'餐饮', brand:'Manner', isIncome:false, rating:'good', photos:[], occurredAt:at(-8,9,30), createdAt:at(-8,9,30) },
+  { id:'l10', type:'ledger', raw:'买书 122', amount:122, category:'学习', isIncome:false, rating:null, photos:[], occurredAt:at(-12,14,0), createdAt:at(-12,14,0) },
+  { id:'l11', type:'ledger', raw:'朋友生日礼物 288', amount:288, category:'人情', isIncome:false, rating:null, photos:[], occurredAt:at(-15,11,0), createdAt:at(-15,11,0) },
+  { id:'l12', type:'ledger', raw:'收到工资 12000', amount:12000, category:'工资', isIncome:true, rating:null, photos:[], occurredAt:at(-20,10,0), createdAt:at(-20,10,0) },
+
+  { id:'w1', type:'wish', sub:'旅游', title:'去日本玩一周', priority:'high', estCost:12000, planWeek:{year:2027,month:7,weekStart:2,weekEnd:3}, extra:{transport:'飞东京', stay:'住大阪', spots:'京都岚山'}, createdAt:at(-3,10,0), occurredAt:at(-3,10,0) },
+  { id:'w2', type:'wish', sub:'购物', title:'徕卡相机', priority:'mid', estCost:26000, planWeek:{year:2026,month:12,weekStart:1,weekEnd:1}, createdAt:at(-5,10,0), occurredAt:at(-5,10,0) },
+  { id:'w3', type:'wish', sub:'美食', title:'打卡外滩黑珍珠', priority:'high', estCost:1800, planWeek:{year:2026,month:10,weekStart:2,weekEnd:2}, extra:{address:'外滩18号', mustOrder:'波士顿龙虾'}, createdAt:at(-6,10,0), occurredAt:at(-6,10,0) },
+  { id:'w4', type:'wish', sub:'旅游', title:'周末近郊露营', priority:'low', estCost:600, planWeek:{year:2026,month:9,weekStart:3,weekEnd:3}, extra:{transport:'自驾', stay:'帐篷'}, createdAt:at(-8,10,0), occurredAt:at(-8,10,0) },
+  { id:'w5', type:'wish', sub:'购物', title:'新款 Switch', priority:'low', estCost:2500, planWeek:{year:2026,month:11,weekStart:1,weekEnd:1}, extra:{necessity:'可选'}, createdAt:at(-10,10,0), occurredAt:at(-10,10,0) },
+  { id:'w6', type:'wish', sub:'美食', title:'学做提拉米苏', priority:'mid', estCost:200, planWeek:{year:2026,month:9,weekStart:1,weekEnd:1}, extra:{address:'家里'}, createdAt:at(-12,10,0), occurredAt:at(-12,10,0) },
+
+  { id:'n1', type:'note', sub:'产品', title:'记账APP', raw:'想做一个自动分类的记账APP', idea:'做一个能一句话自动归类到记账/愿望/待办的 App，输入即分类，减少手动整理', progress:'已确定三分类与语音输入方案，正在出码', reason:'市面上的记账 App 都要手动选分类，太繁琐', extra:{targetUser:'想随手记的人', platform:'iOS + 安卓（Web 先行）'}, occurredAt:at(-2,21,0), createdAt:at(-2,21,0), updatedAt:at(0,9,0) },
+  { id:'n2', type:'note', sub:'写作', title:'悬疑小说《雾港》', raw:'想写一本悬疑小说', idea:'发生在海边小城的连环失踪案，女记者追查真相', progress:'写了前两章，卡在第三章转折', reason:'一直想试试悬疑题材，把童年听过的传闻写下来', extra:{style:'冷峻写实', genre:'悬疑/推理', protagonist:'林默（女记者）', outline:'第一章 失踪的渔夫…'}, occurredAt:at(-1,22,0), createdAt:at(-1,22,0), updatedAt:at(0,8,0) },
+  { id:'n3', type:'note', sub:'学习', title:'学日语 N2', raw:'想系统学日语', idea:'为了看生肉日剧和明年日本自由行，系统学日语到 N2', progress:'五十音过关，在练语法', reason:'想去日本玩时能自己沟通', extra:{goal:'一年内过 N2', source:'红宝书 + 多邻国'}, occurredAt:at(-4,20,0), createdAt:at(-4,20,0), updatedAt:at(-3,20,0) }
+];
+localStorage.setItem('pm.records.v1', JSON.stringify(recs));
+localStorage.setItem('pm.settings.v1', JSON.stringify({ nickname:'', energyLimit:10 }));
+const q = location.hash.slice(1);
+location.replace('index.html' + (q ? '?' + q : ''));
+</script>
