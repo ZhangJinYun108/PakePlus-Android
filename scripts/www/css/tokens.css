@@ -1,0 +1,255 @@
+/* ============================================================
+   设计令牌 · 马卡龙柔和体系
+   规则：无硬边框、大圆角、柔和低对比阴影
+   ============================================================ */
+:root {
+  /* —— 马卡龙主色 —— */
+  --pink-50:  #FFF4F7;
+  --pink-100: #FFE4EC;
+  --pink-200: #FFD1DF;
+  --pink-300: #FFB3C6;
+  --pink-400: #F58FAC;
+  --pink-600: #D96B8C;
+
+  --mint-50:  #F1FCF8;
+  --mint-100: #DDF6EC;
+  --mint-200: #C4EFDF;
+  --mint-300: #A3E3CB;
+  --mint-500: #5FC3A0;
+
+  --lav-50:   #F7F4FD;
+  --lav-100:  #ECE5FA;
+  --lav-200:  #DDD1F5;
+  --lav-300:  #C7B4ED;
+  --lav-500:  #9B7FD4;
+
+  --butter-100: #FFF6DC;
+  --butter-200: #FFEDBF;
+  --butter-300: #FFE09A;
+  --butter-500: #E5B54B;
+
+  --sky-100:  #E4F1FB;
+  --sky-200:  #CCE5F7;
+  --sky-500:  #6BAEDB;
+
+  --peach-100: #FFEDE3;
+  --peach-200: #FFDCC9;
+  --peach-500: #D99A78;
+
+  /* —— 语义色 —— */
+  --c-expense: #F58FAC;   /* 支出 = 粉（国内涨红跌绿：支出用粉红系） */
+  --c-income:  #5FC3A0;   /* 收入 = 薄荷绿 */
+  --c-high:    #FFB3C6;   /* 高优先级 / 高精力 */
+  --c-mid:     #FFE09A;   /* 中 */
+  --c-low:     #A3E3CB;   /* 低 */
+
+  /* —— 中性 —— */
+  --bg:        #FFFAFB;
+  --bg-warm:   #FFF6F8;
+  --surface:   #FFFFFF;
+  --surface-2: #FDF6F8;
+
+  --text:      #5C4A54;
+  --text-2:    #8E7C86;
+  --text-3:    #B7A8B0;
+  --text-on:   #FFFFFF;
+
+  /* 分隔线 / 弱边框（此前遗漏定义，致 app.css 中 var(--line) 失效） */
+  --line:      #EADCE2;
+
+  /* —— 圆角（无硬边框，一律大圆角） —— */
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r-md: 18px;
+  --r-lg: 24px;
+  --r-xl: 30px;
+  --r-full: 999px;
+
+  /* —— 间距 —— */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 40px;
+
+  /* —— 阴影（柔和、无边框替代） —— */
+  --sh-xs: 0 2px 8px rgba(190, 150, 170, .08);
+  --sh-sm: 0 4px 14px rgba(190, 150, 170, .10);
+  --sh-md: 0 6px 20px rgba(190, 150, 170, .13);
+  --sh-lg: 0 10px 30px rgba(190, 150, 170, .16);
+  --sh-pink: 0 6px 18px rgba(245, 143, 172, .28);
+
+  /* —— 字体 —— */
+  --font: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB",
+          "Microsoft YaHei UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-base: 14px;
+  --fs-md: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
+  --fs-3xl: 30px;
+
+  /* —— 动效 —— */
+  --ease: cubic-bezier(.22,.8,.3,1);
+  --dur: .28s;
+
+  /* —— 布局 —— */
+  --app-max: 430px;
+  --bar-h: 62px;
+
+  /* —— 图标主题化（每套主题可重定义，让图标风格随主题变） —— */
+  --ico-w: 1.8;                                  /* 描边粗细 */
+  --ico-fill: none;                              /* 是否填充 */
+  --ico-filter: none;                            /* 手绘抖动 / 其他滤镜 */
+  --tile-r: 17px;                                /* 图标卡圆角（可 4 值不规则） */
+  --tile-extra: 0 0 0 0 rgba(0,0,0,0);           /* 图标卡附加描边/投影 */
+
+  /* —— 背景底纹（每主题一套 SVG 图案，避免大色块单调） —— */
+  --bg-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='2.1' fill='%23F3C7D8'/%3E%3C/svg%3E");
+  --bg-tex-size: 40px 40px;
+  --bg-tex-op: .5;
+}
+
+/* ============================================================
+   视觉风格（主题）：data-theme 挂到 <html>，全局覆盖 :root 变量
+   每套只重定义"颜色/字体/阴影"；圆角·间距·字号·动效沿用默认
+   切换由 store.applyAppTheme() 设置 document.documentElement.dataset.theme
+   ============================================================ */
+
+/* —— 手绘卡通风：奶油马卡龙 · 暖褐描边 · 童趣圆体 —— */
+[data-theme="handdrawn"] {
+  --pink-50:#FFF1F4; --pink-100:#FFE0E8; --pink-200:#FFC9D8; --pink-300:#F7B7C4; --pink-400:#E89BB0; --pink-600:#C97A92;
+  --mint-50:#F1FBF6; --mint-100:#DDF4EA; --mint-200:#C2ECD6; --mint-300:#A8E6CF; --mint-500:#5FBFA0;
+  --lav-50:#F7F4FB;  --lav-100:#EFE9F8;  --lav-200:#E2D8F3;  --lav-300:#C9BAE9; --lav-500:#9B86D6;
+  --butter-100:#FFF6E8; --butter-200:#FFEBCF; --butter-300:#FFD9A8; --butter-500:#E0A24E;
+  --sky-100:#EAF2FB;  --sky-200:#D2E6F6;  --sky-500:#6BAEDB;
+  --peach-100:#FFEEE4; --peach-200:#FFDCC9; --peach-500:#D9A98C;
+
+  --c-expense:#E89BB0; --c-income:#5FBFA0; --c-high:#F7B7C4; --c-mid:#FFD9A8; --c-low:#A8E6CF;
+
+  --bg:#FFF7F9; --bg-warm:#FFF1F4; --surface:#FFFFFF; --surface-2:#FDF3F6;
+  --text:#6B5B63; --text-2:#94868E; --text-3:#BCAEB6; --text-on:#FFFFFF;
+  --line:#EBDDE3;
+
+  --font:"ZCOOL KuaiLe","YouYuan","Yuanti SC","Comic Sans MS","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --sh-xs:0 2px 8px rgba(150,120,135,.10);
+  --sh-sm:0 4px 14px rgba(150,120,135,.12);
+  --sh-md:0 6px 20px rgba(150,120,135,.15);
+  --sh-lg:0 10px 30px rgba(150,120,135,.18);
+  --sh-pink:0 6px 18px rgba(232,155,176,.26);
+
+  /* 手绘：抖动粗线 + 不规则圆角 + 纸张点阵底纹 + 微旋转由 CSS 控制 */
+  --ico-w: 2.4;
+  --ico-fill: none;
+  --ico-filter: url(#rough);
+  --tile-r: 18px 15px 19px 16px;
+  --tile-extra: inset 0 0 0 2px rgba(168,122,135,.28);
+  --bg-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='3' cy='3' r='1.1' fill='%23CDB4BC'/%3E%3C/svg%3E");
+  --bg-tex-size: 26px 26px;
+  --bg-tex-op: .55;
+}
+
+/* —— 国风新中式：宣纸米 · 墨黑主 · 朱砂点缀 · 描金 · 楷体 —— */
+[data-theme="guofeng"] {
+  --pink-50:#FBEEEC; --pink-100:#F4DBD6; --pink-200:#EAB9B1; --pink-300:#DE9A8F; --pink-400:#C0392B; --pink-600:#9E2E22;
+  --mint-50:#F1F5EF; --mint-100:#E2ECDF; --mint-200:#CADFC2; --mint-300:#A9C79C; --mint-500:#5E8C53;
+  --lav-50:#F4F1EC;  --lav-100:#E8E2D8;  --lav-200:#D6CDBE;  --lav-300:#B9AC97; --lav-500:#7A6E5A;
+  --butter-100:#F7F0E0; --butter-200:#EFE2C4; --butter-300:#E2CD9B; --butter-500:#B8860B;
+  --sky-100:#E8EFF1;  --sky-200:#CFE0E5;  --sky-500:#5B8A99;
+  --peach-100:#F4ECE4; --peach-200:#E8D6C6; --peach-500:#C08552;
+
+  --c-expense:#C0392B; --c-income:#5E8C53; --c-high:#DE9A8F; --c-mid:#E2CD9B; --c-low:#A9C79C;
+
+  --bg:#F5EFE6; --bg-warm:#F4EFE6; --surface:#FCFAF4; --surface-2:#F1EBE0;
+  --text:#2B2B2B; --text-2:#6B645A; --text-3:#A89F90; --text-on:#FFFFFF;
+  --line:#E0D8C8;
+
+  --font:"KaiTi","STKaiti","Kaiti SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --sh-xs:0 2px 8px rgba(60,50,40,.07);
+  --sh-sm:0 4px 14px rgba(60,50,40,.09);
+  --sh-md:0 6px 20px rgba(60,50,40,.11);
+  --sh-lg:0 10px 30px rgba(60,50,40,.14);
+  --sh-pink:0 6px 18px rgba(192,57,43,.18);
+
+  /* 国风：瘦劲墨线 + 描金细边 + 云纹水波底纹 */
+  --ico-w: 1.6;
+  --ico-fill: none;
+  --ico-filter: none;
+  --tile-r: 14px;
+  --tile-extra: inset 0 0 0 1.5px rgba(176,134,11,.38);
+  --bg-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44'%3E%3Cpath d='M-4 22 q11 -11 22 0 q11 11 22 0' stroke='%23C2B49C' stroke-width='1' fill='none'/%3E%3C/svg%3E");
+  --bg-tex-size: 44px 44px;
+  --bg-tex-op: .4;
+}
+
+/* —— 潮玩多巴胺（奶油多巴胺）：高饱和撞色 · 圆润活泼 —— */
+[data-theme="dopamine"] {
+  --pink-50:#FFE9F3; --pink-100:#FFD0E6; --pink-200:#FFB3D9; --pink-300:#FF7EB8; --pink-400:#FF4D8D; --pink-600:#E02E73;
+  --mint-50:#E6FBF0; --mint-100:#C8F4DD; --mint-200:#9FEBBF; --mint-300:#6BCB77; --mint-500:#3FB866;
+  --lav-50:#F1EAFF;  --lav-100:#E3D5FF;  --lav-200:#CBB0FF;  --lav-300:#B088F0; --lav-500:#8B5BE6;
+  --butter-100:#FFF6D6; --butter-200:#FFECAB; --butter-300:#FFDD6B; --butter-500:#F5C518;
+  --sky-100:#E2F1FF;  --sky-200:#BFE2FF;  --sky-500:#4D96FF;
+  --peach-100:#FFEEDF; --peach-200:#FFD9BF; --peach-500:#FF9F6B;
+
+  --c-expense:#FF4D8D; --c-income:#3FB866; --c-high:#FF7EB8; --c-mid:#FFDD6B; --c-low:#6BCB77;
+
+  --bg:#FFF6FB; --bg-warm:#FFEFF6; --surface:#FFFFFF; --surface-2:#FDF2F8;
+  --text:#4A3A46; --text-2:#8A7682; --text-3:#BBA6B2; --text-on:#FFFFFF;
+  --line:#F3DCEA;
+
+  --font:"PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --sh-xs:0 2px 10px rgba(255,90,160,.12);
+  --sh-sm:0 4px 16px rgba(255,90,160,.15);
+  --sh-md:0 6px 22px rgba(255,90,160,.18);
+  --sh-lg:0 10px 32px rgba(255,90,160,.22);
+  --sh-pink:0 6px 20px rgba(255,77,141,.34);
+
+  /* 多巴胺：粗描边 + 贴纸投影 + 星星亮片底纹 */
+  --ico-w: 2.8;
+  --ico-fill: none;
+  --ico-filter: none;
+  --tile-r: 20px;
+  --tile-extra: 0 5px 0 rgba(255,77,141,.16);
+  --bg-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cpath d='M36 13 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3z' fill='%23FFC94D'/%3E%3Ccircle cx='13' cy='15' r='2' fill='%23FF8FC6'/%3E%3Ccircle cx='59' cy='53' r='2.4' fill='%237FB0F0'/%3E%3C/svg%3E");
+  --bg-tex-size: 72px 72px;
+  --bg-tex-op: .5;
+}
+
+/* —— 极简黑白：纯白底 · 黑描边 · 大量留白 · 细黑体 —— */
+[data-theme="mono"] {
+  --pink-50:#FAFAFA; --pink-100:#F0F0F0; --pink-200:#E4E4E4; --pink-300:#D0D0D0; --pink-400:#111111; --pink-600:#000000;
+  --mint-50:#FAFAFA; --mint-100:#F0F0F0; --mint-200:#E4E4E4; --mint-300:#D0D0D0; --mint-500:#2B2B2B;
+  --lav-50:#FAFAFA;  --lav-100:#F0F0F0;  --lav-200:#E4E4E4;  --lav-300:#D0D0D0; --lav-500:#444444;
+  --butter-100:#F0F0F0; --butter-200:#E4E4E4; --butter-300:#D0D0D0; --butter-500:#666666;
+  --sky-100:#F0F0F0;  --sky-200:#E4E4E4;  --sky-500:#333333;
+  --peach-100:#F0F0F0; --peach-200:#E4E4E4; --peach-500:#999999;
+
+  --c-expense:#111111; --c-income:#666666; --c-high:#111111; --c-mid:#999999; --c-low:#BBBBBB;
+
+  --bg:#FFFFFF; --bg-warm:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F7F7;
+  --text:#111111; --text-2:#666666; --text-3:#999999; --text-on:#FFFFFF;
+  --line:#E6E6E6;
+
+  --font:"Helvetica Neue","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --sh-xs:0 1px 3px rgba(0,0,0,.04);
+  --sh-sm:0 2px 8px rgba(0,0,0,.05);
+  --sh-md:0 4px 14px rgba(0,0,0,.06);
+  --sh-lg:0 8px 22px rgba(0,0,0,.08);
+  --sh-pink:0 4px 14px rgba(0,0,0,.10);
+
+  /* 极简：细黑描边方角 + 细网格底纹 */
+  --ico-w: 2;
+  --ico-fill: none;
+  --ico-filter: none;
+  --tile-r: 10px;
+  --tile-extra: inset 0 0 0 1.5px var(--line);
+  --bg-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M22 0 H0 V22' stroke='%23000000' stroke-width='.5' fill='none'/%3E%3C/svg%3E");
+  --bg-tex-size: 22px 22px;
+  --bg-tex-op: .07;
+}
