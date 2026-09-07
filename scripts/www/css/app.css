@@ -164,9 +164,11 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
 .inputbar {
   flex-shrink: 0;
   display: flex; align-items: center; gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4) calc(env(safe-area-inset-bottom, 0px) + 14px);
+  /* 键盘抬起用「底部内边距」实现（--kb-lift 由 keyboard.js 写入），
+     不用 transform，避免打断安卓 WebView 的中文输入法。 */
+  padding: var(--sp-3) var(--sp-4) calc(env(safe-area-inset-bottom, 0px) + 14px + var(--kb-lift, 0px));
   background: linear-gradient(to top, var(--bg-warm) 70%, rgba(255,246,248,0));
-  transition: transform .2s var(--ease);
+  transition: padding-bottom .2s var(--ease);
 }
 .input-wrap {
   flex: 1; height: 44px;
@@ -376,10 +378,11 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
 .modal {
   width: 100%; background: var(--surface);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
-  padding: var(--sp-5) var(--sp-5) calc(env(safe-area-inset-bottom,0px) + 20px);
+  /* 键盘抬起同样用底部内边距，避免 transform 打断输入法 */
+  padding: var(--sp-5) var(--sp-5) calc(env(safe-area-inset-bottom,0px) + 20px + var(--kb-lift, 0px));
   box-shadow: var(--sh-lg);
   animation: sheet-up .3s var(--ease);
-  transition: transform .2s var(--ease);
+  transition: padding-bottom .2s var(--ease);
 }
 @keyframes sheet-up { from { transform: translateY(100%) } to { transform: none } }
 .modal-title { font-size: var(--fs-lg); font-weight: 600; margin-bottom: var(--sp-4); }
