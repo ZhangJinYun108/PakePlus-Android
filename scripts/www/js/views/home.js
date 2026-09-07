@@ -207,7 +207,13 @@ export function HomeView() {
     }
   });
 
-  setTimeout(() => input.focus(), 120);
+  // 移动端（尤其是 Tauri/PakePlus 打包的 WebView）不在加载时抢焦点：
+  // 自动聚焦会触发软键盘/输入法进入异常态，导致中文拼音提交不进输入框。
+  // 改为让用户自己点输入框，与原生 App 行为一致，输入法最稳。
+  const ua = navigator.userAgent || '';
+  const isTouchDevice = /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(ua)
+    || (navigator.maxTouchPoints > 0 && window.matchMedia('(pointer: coarse)').matches);
+  if (!isTouchDevice) setTimeout(() => input.focus(), 120);
 
   // 纪念日提醒：正好提前一周 / 提前一天 / 当天，打开首页时弹一下
   const rt = reminderText();
