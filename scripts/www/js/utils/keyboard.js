@@ -43,15 +43,17 @@ function apply() {
   // 有精确信号 → 用精确值（只抬被遮部分，不空）
   const pd = preciseDelta();
   if (pd !== null) {
-    current.el.style.transform = pd > 0 ? `translateY(${-pd}px)` : '';
+    // 用底部内边距抬起，绝不给输入框容器加 transform（否则安卓 WebView 的
+    // 中文输入法/软键盘会断连，出现"打不了字"）。见下方说明。
+    current.el.style.setProperty('--kb-lift', pd > 0 ? pd + 'px' : '');
     return;
   }
   // 无精确信号，但输入框正处在聚焦态（键盘假定已弹出）→ 用估算保证可见
   if (isMobile()) {
     const kb = estimateKeyboardHeight() + current.gap;
-    current.el.style.transform = `translateY(${-kb}px)`;
+    current.el.style.setProperty('--kb-lift', kb + 'px');
   } else {
-    current.el.style.transform = '';
+    current.el.style.setProperty('--kb-lift', '');
   }
 }
 
@@ -87,7 +89,7 @@ export function initKeyboardLift() {
       if (!a || !(a.matches && a.matches('input, textarea'))) {
         current = null;
         clearTimeout(pendingTimer);
-        document.querySelectorAll('[data-keyboard-lift]').forEach(el => { el.style.transform = ''; });
+        document.querySelectorAll('[data-keyboard-lift]').forEach(el => { el.style.setProperty('--kb-lift', ''); });
       }
     }, 80);
   });
