@@ -19,7 +19,9 @@ body {
   background: linear-gradient(170deg, var(--pink-50) 0%, var(--bg) 30%, var(--lav-50) 100%);
 }
 button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
-input, textarea { font-family: inherit; border: none; outline: none; background: none; color: inherit; }
+/* 安卓 WebView 对 <16px 的输入框会在聚焦时强制缩放，把中文输入法上下文整断（打不了字）。
+   所有输入统一 16px，并给出可见光标色。 */
+input, textarea { font-family: inherit; border: none; outline: none; background: none; color: inherit; font-size: 16px; caret-color: var(--pink-400); }
 ::-webkit-scrollbar { width: 0; height: 0; }
 /* hidden 属性必须能压过组件自身的 display，否则切换态会同时出现 */
 [hidden] { display: none !important; }
@@ -53,9 +55,11 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
   z-index: 1;
   animation: screen-in var(--dur) var(--ease);
 }
+/* 只用 opacity 做进场，绝不给 .screen 加 transform —— .screen 是几乎所有输入框的祖先，
+   任何 transform 都会让安卓 WebView 的中文输入法断连（打不了拼音）。 */
 @keyframes screen-in {
-  from { opacity: 0; transform: translateY(10px) scale(.99); }
-  to   { opacity: 1; transform: none; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .scroll {
@@ -178,7 +182,7 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
   transition: all var(--dur) var(--ease);
 }
 .input-wrap input {
-  width: 100%; font-size: var(--fs-md); color: var(--text);
+  width: 100%; font-size: 16px; color: var(--text);
 }
 .input-wrap input::placeholder { color: var(--text-3); }
 
@@ -384,16 +388,17 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
   animation: sheet-up .3s var(--ease);
   transition: padding-bottom .2s var(--ease);
 }
-@keyframes sheet-up { from { transform: translateY(100%) } to { transform: none } }
+/* 弹窗只做淡入，不加 transform —— .modal 内含编辑输入框，transform 同样会断 IME。 */
+@keyframes sheet-up { from { opacity: 0 } to { opacity: 1 } }
 .modal-title { font-size: var(--fs-lg); font-weight: 600; margin-bottom: var(--sp-4); }
 .modal-input {
   width: 100%; background: var(--surface-2); border-radius: var(--r-md);
-  padding: 13px var(--sp-4); font-size: var(--fs-md); margin-bottom: var(--sp-4);
+  padding: 13px var(--sp-4); font-size: 16px; margin-bottom: var(--sp-4);
 }
 .modal-textarea {
   min-height: 92px; resize: none; line-height: 1.5; font-family: inherit;
   width: 100%; background: var(--surface-2); border-radius: var(--r-md);
-  padding: 13px var(--sp-4); font-size: var(--fs-md); margin-bottom: var(--sp-4);
+  padding: 13px var(--sp-4); font-size: 16px; margin-bottom: var(--sp-4);
 }
 .modal-actions { display: flex; gap: var(--sp-3); }
 .btn {
@@ -915,7 +920,7 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
 .set-div { height: 1px; background: var(--surface-2); margin: 0 -8px; }
 .set-input {
   background: var(--surface-2); border-radius: var(--r-md);
-  padding: 11px 14px; font-size: var(--fs-base); color: var(--text);
+  padding: 11px 14px; font-size: 16px; color: var(--text);
   width: 100%;
 }
 .set-input::placeholder { color: var(--text-3); }
@@ -1363,7 +1368,7 @@ input, textarea { font-family: inherit; border: none; outline: none; background:
 .wb-quick { display: flex; align-items: center; gap: 8px; }
 .wb-input {
   width: 78px; border: 1px solid var(--line); background: var(--surface);
-  border-radius: var(--r-md); padding: 8px 10px; font-size: var(--fs-md); color: var(--text);
+  border-radius: var(--r-md); padding: 8px 10px; font-size: 16px; color: var(--text);
   text-align: center; outline: none;
 }
 .wb-input:focus { border-color: var(--lav-400); }
