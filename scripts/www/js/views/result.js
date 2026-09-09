@@ -1,7 +1,7 @@
 /* ============================================================
    模块 2 · 分类结果页（通用外壳 + 三套字段模板）
    外壳：回显原输入 → 三分类 chip → 属性软胶囊(✎可改)
-   保存策略：新建(无 id)进入后倒计时，停手即自动落库；编辑(有 id)不自动存，需点"保存"
+   保存策略：新建 / 编辑均手动点「保存」才落库（无倒计时自动储存）
    ============================================================ */
 import { h, esc, toast, editSheet, pickSheet, confirmSheet } from '../utils/dom.js';
 import { friendlyDateTime, formatWeekRange, weeksInMonth } from '../utils/time.js';
@@ -9,8 +9,6 @@ import { saveRecord, getSettings, todayDigest, deleteRecord } from '../store.js'
 import { parseFoods, foodsSummary, foodsToLines, parseFoodLines, sumFoods } from '../utils/kcal.js';
 import { parseActivityLines, activitiesToLines, sumBurn, recBurn } from '../utils/exercise.js';
 import { go, back } from '../router.js';
-
-const AUTOSAVE_MS = 4000;
 
 const TYPE_META = {
   ledger: { label: '记账',  cls: 'on' },
@@ -58,38 +56,26 @@ export function ResultView({ draft }) {
         <span class="autosave-text">停手就自动记下</span>
         <div class="autosave-actions">
           ${isEdit ? `<button class="autosave-del" data-act="delete" title="删除这条记录">删除</button>` : ''}
-          <button class="autosave-now" data-act="save-now">立即记下</button>
+          <button class="autosave-now" data-act="save-now">保存</button>
         </div>
       </div>
     </div>`);
 
   const typeRow = el.querySelector('#type-row');
   const fieldsEl = el.querySelector('#fields');
-  const fill = el.querySelector('.autosave-fill');
 
-  // 编辑模式：去掉倒计时自动保存，改为手动点"保存"
-  if (isEdit) {
-    const bar = el.querySelector('.autosave');
-    bar.classList.add('edit-mode');
-    bar.querySelector('.autosave-track').style.display = 'none';
-    bar.querySelector('.autosave-text').textContent = '修改后点保存';
-    bar.querySelector('.autosave-now').textContent = '保存';
-  }
+  // 新建 / 编辑：统一手动保存，去掉"停手自动记下"的倒计时（用户要求自己确认）
+  const bar = el.querySelector('.autosave');
+  bar.classList.add('edit-mode');
+  bar.querySelector('.autosave-track').style.display = 'none';
+  bar.querySelector('.autosave-text').textContent = isEdit ? '修改后点保存' : '核对后点保存';
+  bar.querySelector('.autosave-now').textContent = '保存';
 
-  /* —— 自动保存倒计时 —— */
-  let t0 = Date.now(), raf = null, saved = false;
-  function tick() {
-    const p = Math.min(1, (Date.now() - t0) / AUTOSAVE_MS);
-    fill.style.width = (p * 100) + '%';
-    if (p >= 1) { commit(); return; }
-    raf = requestAnimationFrame(tick);
-  }
-  function resetTimer() { t0 = Date.now(); }
-  function stopTimer() { if (raf) cancelAnimationFrame(raf); raf = null; }
-
+  /* —— 手动保存（无倒计时自动落库） —— */
+  let saved = false;
   function commit() {
     if (saved) return;
-    saved = true; stopTimer();
+    saved = true;
     saveRecord(rec);
     checkEnergyOverflow();
     checkKcalOverflow();
@@ -156,7 +142,7 @@ export function ResultView({ draft }) {
       rec = { ...base, title: rec.title || rec.raw, energy: rec.energy || 'mid',
               energyBy: 'manual', priority: 'mid', done: false, photos: [] };
     }
-    renderTypes(); renderFields(); resetTimer();
+    renderTypes(); renderFields();
   }
 
   /* —— 字段模板 —— */
@@ -359,8 +345,6 @@ export function ResultView({ draft }) {
 
   /* —— 交互 —— */
   el.addEventListener('click', async (e) => {
-    resetTimer();
-
     const typeBtn = e.target.closest('[data-type]');
     if (typeBtn) return switchType(typeBtn.dataset.type);
 
@@ -394,7 +378,6 @@ export function ResultView({ draft }) {
 
     // 删除（仅编辑已有记录时出现）：二次确认，防误删
     if (act === 'delete') {
-      stopTimer();
       const ok = await confirmSheet({
         title: '删除这条记录？',
         message: '删除后不可恢复',
@@ -409,11 +392,8 @@ export function ResultView({ draft }) {
       return;
     }
 
-    stopTimer();
     await handleAct(act);
     renderFields();
-    resetTimer();
-    if (!saved && !isEdit) { stopTimer(); raf = requestAnimationFrame(tick); }
   });
 
   async function handleAct(act) {
@@ -574,7 +554,6 @@ export function ResultView({ draft }) {
 
   renderTypes();
   renderFields();
-  if (!isEdit) raf = requestAnimationFrame(tick);
   return el;
 }
 
