@@ -1,4 +1,4 @@
-import { register, mount, go, current } from './router.js';
+import { register, mount, go, current, initRouteGuard } from './router.js';
 import { HomeView } from './views/home.js';
 import { ResultView } from './views/result.js';
 import { LedgerView } from './views/ledger.js';
@@ -26,6 +26,9 @@ register('timeline', TimelineView);
 register('dashboard', DashboardView);
 
 mount(document.getElementById('app'));
+
+// 接管系统返回键：压底一条历史，使返回手势/返回键回到上一屏而非关闭应用
+initRouteGuard();
 
 // 启动即套用已保存的外观主题（字体档 / 背景）
 import { applyAppTheme } from './store.js';
@@ -80,3 +83,24 @@ document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('touchmove', e => {
   if (e.touches.length > 1) e.preventDefault();
 }, { passive: false });
+
+// 左边缘右滑 = 返回上一屏（不与列表左滑删除冲突：仅屏幕最左 28px 起、向右滑才触发）
+function initSwipeBack() {
+  const EDGE = 28, TH = 60;
+  let sx = 0, sy = 0, tracking = false;
+  window.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    if (t.target.closest && t.target.closest('[data-swipe]')) return; // 列表删除手势优先
+    if (t.clientX <= EDGE) { sx = t.clientX; sy = t.clientY; tracking = true; }
+  }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (!tracking) return;
+    const t = e.touches[0];
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dy) > Math.abs(dx) || dx < 0) { tracking = false; return; } // 只认向右、且基本水平
+    if (dx > TH) { tracking = false; history.back(); }
+  }, { passive: true });
+  window.addEventListener('touchend', () => { tracking = false; }, { passive: true });
+}
+initSwipeBack();
