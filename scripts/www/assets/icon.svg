@@ -1,0 +1,18 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#5BA678"/>
+      <stop offset="100%" stop-color="#2F6E45"/>
+    </linearGradient>
+  </defs>
+  <!-- 圆角方形底 -->
+  <rect width="1024" height="1024" rx="230" ry="230" fill="url(#bg)"/>
+  <!-- 顶部高光，营造轻微立体感 -->
+  <rect x="0" y="0" width="1024" height="512" rx="230" ry="230" fill="#FFFFFF" opacity="0.06"/>
+  <!-- 中央勾选标记：粗描边、圆角接头 —— 代表「已记录」 -->
+  <path d="M280 530 L450 700 L750 360"
+        stroke="#FFFFFF" stroke-width="90"
+        stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- 右上角「同步状态」小光点 -->
+  <circle cx="820" cy="220" r="48" fill="#A8D9BC"/>
+</svg>
