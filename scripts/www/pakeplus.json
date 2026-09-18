@@ -1,0 +1,61 @@
+{
+  "name": "必须记",
+  "package": "com.bixu-ji.app",
+  "version": "1.0.0",
+  "description": "极简个人生活管理 · 双端实时同步",
+  "author": "PAKE Plus",
+  "icon": "./assets/icon.png",
+  "url": "./index.html",
+  "loading": "./assets/loading.html",
+
+  "display": {
+    "defaultSize": [1280, 820],
+    "minSize": [900, 600],
+    "titleBarStyle": "overlay",
+    "transparent": false,
+    "backgroundColor": "#F5F4F1"
+  },
+
+  "window": {
+    "width": 1280,
+    "height": 820,
+    "resizable": true,
+    "fullscreen": false,
+    "center": true,
+    "decorations": true
+  },
+
+  "platforms": {
+    "macos": { "category": "public.app-category.productivity" },
+    "windows": { "publisher": "PAKE Plus" },
+    "linux": { "categories": ["Office"] }
+  },
+
+  "build": {
+    "outDir": "./build",
+    "formats": {
+      "windows": ["nsis", "msi", "portable"],
+      "macos": ["dmg", "pkg"],
+      "linux": ["deb", "AppImage"]
+    },
+    "targets": "all"
+  },
+
+  "metadata": {
+    "homepage": "",
+    "keywords": ["personal", "tracker", "lifestyle", "minimal", "pakeplus"],
+    "permissions": ["storage", "notifications"],
+    "shortDescription": "极简个人生活管理"
+  },
+
+  "tray": {
+    "enable": true,
+    "icon": "./assets/tray.png",
+    "menu": [
+      { "label": "打开主界面", "action": "show" },
+      { "label": "添加记录", "action": "input" },
+      { "type": "separator" },
+      { "label": "退出", "action": "quit" }
+    ]
+  }
+}
