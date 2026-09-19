@@ -20,8 +20,9 @@
 │   ├── parser.js      # 语义预判分类器
 │   └── app.js         # 应用主逻辑（路由 + 渲染 + 交互）
 ├── pakeplus.json      # PakePlus 打包配置
+├── make_icons.py      # 应用图标生成脚本（Pillow）
 ├── README.md          # 你正在看的文件
-└── assets/            # 应用图标、启动加载页（按需）
+└── assets/            # icon.png/ico、tray.png、loading.html 等（见下方「应用图标」）
 ```
 
 ---
@@ -60,6 +61,68 @@ PakePlus 会读 `pakeplus.json` 的 `window` / `build` / `platforms` 字段，�
 | macOS   | `必须记-1.0.0.dmg` / `必须记-1.0.0.pkg` |
 | Linux   | `必须记-1.0.0.deb` / `必须记.AppImage` |
 | Android | 直出 APK（手机端壳） |
+
+---
+
+## 应用图标（桌面快捷方式）
+
+打包成功后，**桌面快捷方式、任务栏、开始菜单、系统托盘**会自动使用下面这套图标，无需手动设置：
+
+| 文件 | 尺寸 | 用途 |
+|---|---|---|
+| `assets/icon.png` | 1024×1024 | 主图标源文件（PakePlus 自动派生各平台格式） |
+| `assets/icon.ico` | 16~256 多分辨率 | **Windows 快捷方式 / 任务栏 / 资源管理器** |
+| `assets/tray.png` | 64×64 | 系统托盘（右下角常驻小图标） |
+| `assets/apple-touch.png` | 180×180 | iOS 添加到主屏幕 |
+| `assets/favicon-32.png` | 32×32 | 浏览器标签栏 |
+| `assets/icon.svg` | 矢量 | 设计源文件（改色 / 改形用） |
+| `assets/loading.html` | — | 启动加载页（图标 + 渐进动画） |
+
+图标设计：鼠尾草绿渐变圆角方块 + 白色对勾（代表「已记录」）+ 右上角同步光点（代表双端实时互通），与 App 内主色 `#3D8A5A` 完全一致。
+
+### 想换图标？两种方式
+
+**方式一 · 改参数重生成（推荐，1 分钟）**
+
+打开 `make_icons.py`，改这几个常量即可：
+
+```python
+TOP  = (91, 166, 120)   # 渐变浅端（RGB）
+BOTTOM = (47, 110, 69)  # 渐变深端（RGB）
+CHECK_POINTS = [(280, 530), (450, 700), (750, 360)]  # 对勾三个折点
+CHECK_WIDTH  = 90        # 对勾粗细
+DOT_CX, DOT_CY, DOT_R = 820, 220, 48  # 同步光点位置和大小
+CORNER_RATIO = 0.225     # 圆角比例（iOS 风格约 0.22~0.24）
+```
+
+然后重新生成：
+
+```bash
+python make_icons.py
+```
+
+一次产出上面表格里的全部 7 个文件，打包时自动生效。
+
+**方式二 · 用现成图片替换**
+
+把你自己的 1024×1024 PNG 覆盖 `assets/icon.png`，再用任意在线工具
+（如 <https://icoconvert.com>）转一份多分辨率 `.ico` 覆盖 `assets/icon.ico` 即可。
+
+### 打包后桌面图标没变？—— Windows 图标缓存
+
+Windows 会缓存快捷方式图标。**重新打包后如果桌面图标还是旧的**，任选一种刷新：
+
+```powershell
+# 方法一：刷新图标缓存（立即生效，无需重启）
+ie4uinit.exe -show
+
+# 方法二：删除缓存文件后重启资源管理器
+taskkill /f /im explorer.exe
+del /a %localappdata%\IconCache.db
+start explorer.exe
+```
+
+> macOS / Linux 无此问题，打包后图标即时生效。
 
 ---
 
