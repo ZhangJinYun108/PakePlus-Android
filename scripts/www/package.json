@@ -1,0 +1,10 @@
+{
+  "name": "bixuji-app",
+  "version": "1.0.0",
+  "description": "必须记 · 极简个人生活管理 App（Web 版）",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "npx --yes serve -l 5190 ."
+  }
+}
